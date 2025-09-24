@@ -1,3 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beeny.site</title>
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <meta property="og:title" content="beeny.site" />
+    <meta property="og:description" content="Beeny's Portfolio" />
+    <meta property="og:image" content="https://your-website.com/preview-image.png" />
+    <meta property="og:url" content="https://beeny.site" />
+    <meta property="og:site_name" content="beeny.site" />
+</head>
+<body>
+
+    <div id="tiles"></div>
+
+    <main class="content-wrapper">
+        <div class="left-side-wrapper">
+            <div class="top-left-box">
+                <div class="pfp-container">
+                    <img src="pfp.png" alt="Your Name" class="profile-pic">
+                </div>
+                <div class="name-container">
+                    <h1>beeny</h1>
+                </div>
+                <div class="bio-container">
+                    <p>
+                        i am an animator, graphic designer, programmer, roblox ugc creator, voice actor, all dat fluff.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bottom-left-box">
+                <h2>Programming Languages</h2>
+                <ul class="languages">
+                    <li>HTML</li>
+                    <li>CSS</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <section class="socials">
+                <h2>Social Media</h2>
+                <ul>
+                    <li><a class="socialgithub"  href="https://github.com/beeneyn" target="_blank">GitHub</a> <a class="socialyoutube" href="https://www.youtube.com/@be_eny/">YouTube</a> <a class="socialreplit"  href="https://replit.com/@beanyguy0" target="_blank">Replit</a></li>
+                    <li><a class="socialtwitter" href="https://x.com/beeny_beans" target="_blank">Twitter</a> <a class="socialdiscord" href="https://discord.com/invite/g6jEm3CjGh">Discord</a> <a href="https://instagram.com/beenyguy" class="socialinstagram">Instagram</a></li>
+                </ul>
+            </section>
+
+            <section class="projects">
+                <h2>Projects</h2>
+                <div class="project-card">
+                    <h3>Gogobeans</h3>
+                    <p>Gogobeans is a gaming platform with tons of unblocked websites Built on Replit.</p>
+                    <a href="#" target="_blank">View Project</a>
+                </div>
+                <div class="project-card">
+                    <h3>Dubblebean</h3>
+                    <p>Dubblebean is a lander page similar to this but without the clutter.</p>
+                    <a href="#" target="_blank">View Project</a>
+                </div>
+                 <div class="project-card">
+                    <h3>Beeny Productions</h3>
+                    <p>Beeny Productions is the production studio behind the shows Beeny's Ultimate Battle and others.</p>
+                    <a href="#" target="_blank">View Project</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
 /* General Body Styles */
 :root {
     --g1: rgb(98, 0, 234);
@@ -16,22 +93,8 @@
       min-height: 100vh;
       overflow: hidden; /* Hide scrollbars caused by the grid */
   }
-
-  /* Gradient Banner Background */
-  #gradient-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    --gradient-color-1: #a960ee;
-    --gradient-color-2: #ff333d;
-    --gradient-color-3: #90e0ff;
-    --gradient-color-4: #ffcb57;
-    z-index: -2; /* Place it behind the tiles */
-  }
   
-  /* Interactive Tiles Background */
+  /* New Interactive Background Styles */
   #tiles {
     position: fixed;
     left: 0px;
@@ -39,7 +102,7 @@
     width: 100vw;
     height: 100vh;
     display: grid;
-    z-index: -1; /* Place it above the gradient but below the content */
+    z-index: -1;
   }
   
   .tile {
@@ -73,7 +136,7 @@
       max-width: 1000px;
       width: 100%;
       gap: 20px;
-      z-index: 2; /* Ensure content is above all backgrounds */
+      z-index: 2; /* Ensure content is above the background */
   }
   
   /* Left side wrapper */
@@ -122,9 +185,9 @@
       margin-top: 0px;
   }
   
-  .beeny-logo {
-      height: 40px;
-      width: auto;
+  .top-left-box h1 {
+      margin: 0;
+      font-size: 2em;
   }
   
   .top-left-box p {
@@ -207,8 +270,7 @@
   
   .project-card {
       background-color: rgba(249, 249, 249, 0.8);
-      border-left: 10px solid red;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-left: 10px solid #db3434;
       padding: 20px;
       margin-bottom: 20px;
       border-radius: 10px 10px 10px 10px;
@@ -318,3 +380,63 @@
       font-weight: bold;
       transition: background-color 0.3s ease;
   }
+
+const wrapper = document.getElementById("tiles");
+
+let columns = 0,
+    rows = 0,
+    toggled = false;
+
+const toggle = () => {
+  toggled = !toggled;
+  document.body.classList.toggle("toggled", toggled);
+}
+
+const handleOnClick = index => {
+  toggle();
+  
+  anime({
+    targets: ".tile",
+    opacity: toggled ? 0 : 1,
+    delay: anime.stagger(50, {
+      grid: [columns, rows],
+      from: index
+    })
+  });
+}
+
+const createTile = index => {
+  const tile = document.createElement("div");
+  
+  tile.classList.add("tile");
+  
+  tile.style.opacity = toggled ? 0 : 1;
+  
+  tile.onclick = e => handleOnClick(index);
+  
+  return tile;
+}
+
+const createTiles = quantity => {
+  Array.from(Array(quantity)).map((tile, index) => {
+    wrapper.appendChild(createTile(index));
+  });
+}
+
+const createGrid = () => {
+  wrapper.innerHTML = "";
+  
+  const size = document.body.clientWidth > 800 ? 100 : 50;
+  
+  columns = Math.floor(document.body.clientWidth / size);
+  rows = Math.floor(document.body.clientHeight / size);
+  
+  wrapper.style.setProperty("--columns", columns);
+  wrapper.style.setProperty("--rows", rows);
+  
+  createTiles(columns * rows);
+}
+
+createGrid();
+
+window.onresize = () => createGrid();
